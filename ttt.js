@@ -1,11 +1,12 @@
 var gameBoard = (() => {
-    //const board = Array(9);
-    const board = ['x', 'o', 'x', 'o' , 'x', 'o', 'x', 'o', 'x']
-    return {
-        boardLength: function() {
-            console.log(board.length);
-        }
+    var board = ['','','','','','','','','']
+    const container = document.getElementById('gameboard');
+    for (i=0; i<9; i++) {
+        let cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.id = 'cell' + i;
+        cell.innerHTML = board[i];
+        container.appendChild(cell);
     }
 })();
 
-gameBoard.boardLength();

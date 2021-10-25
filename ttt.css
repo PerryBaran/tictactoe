@@ -30,7 +30,7 @@ input {
     font-size: 10rem;
 }
 
-.board {
+#gameboard {
     margin: auto;
     display: grid;
     aspect-ratio: 1;
@@ -49,38 +49,38 @@ input {
     border: 0.1px solid rgb(0, 0, 0);
 }
 
-#topleft {
+#cell0 {
     border-top: none;
     border-left: none;
 }
 
-#top{
+#cell1 {
     border-top: none;
 }
 
-#topright {
+#cell2 {
     border-top: none;
     border-right: none;
 }
 
-#middleleft{
+#cell3 {
     border-left: none;
 }
 
-#middleright {
+#cell5 {
     border-right: none;
 }
 
-#bottomleft {
+#cell6 {
     border-bottom: none;
     border-left: none;
 }
 
-#bottom{
+#cell7 {
     border-bottom: none;
 }
 
-#bottomright {
+#cell8 {
     border-bottom: none;
     border-right: none;
 }
