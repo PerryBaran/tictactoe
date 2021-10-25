@@ -1,0 +1,86 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+h1 {
+    margin: auto;
+    text-align: center;
+}
+
+.scoreboard {
+    display: flex;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+}
+
+.player {
+    flex: 1;
+}
+
+input {
+    background: none;
+    border: none;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.score {
+    font-size: 10rem;
+}
+
+.board {
+    margin: auto;
+    display: grid;
+    aspect-ratio: 1;
+    width: 60%;
+    max-width: 600px;
+    cursor: pointer;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    font-size: 8rem;
+    border: 0.1px solid rgb(0, 0, 0);
+}
+
+#topleft {
+    border-top: none;
+    border-left: none;
+}
+
+#top{
+    border-top: none;
+}
+
+#topright {
+    border-top: none;
+    border-right: none;
+}
+
+#middleleft{
+    border-left: none;
+}
+
+#middleright {
+    border-right: none;
+}
+
+#bottomleft {
+    border-bottom: none;
+    border-left: none;
+}
+
+#bottom{
+    border-bottom: none;
+}
+
+#bottomright {
+    border-bottom: none;
+    border-right: none;
+}
