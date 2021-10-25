@@ -24,6 +24,7 @@ input {
     border: none;
     text-align: center;
     font-size: 2rem;
+    width: 100%;
 }
 
 .score {
@@ -45,7 +46,7 @@ input {
     justify-content: center;
     align-items: center;
     aspect-ratio: 1;
-    font-size: 8rem;
+    font-size: 5rem;
     border: 0.1px solid rgb(0, 0, 0);
 }
 
