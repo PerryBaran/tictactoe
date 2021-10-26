@@ -73,29 +73,32 @@ const GameBoard = (() => {
     const checkWin = () => {
         if (board[0] !== undefined && board[0] === board[1] && board[0] === board[2]){ //top row
             colorLine(0, 1, 2);
-            applyWin();
-        } else if (board[3] !== undefined && board[3] === board[4] && board[3] === board[5]){ //middle row
+            win = true;
+        } if (board[3] !== undefined && board[3] === board[4] && board[3] === board[5]){ //middle row
             colorLine(3, 4, 5);
-            applyWin();
-        } else if (board[6] !== undefined && board[6] === board[7] && board[6] === board[8]){ //bottom row
+            win = true;
+        } if (board[6] !== undefined && board[6] === board[7] && board[6] === board[8]){ //bottom row
             colorLine(6, 7, 8);
-            applyWin();
-        } else if (board[0] !== undefined && board[0] === board[3] && board[0] === board[6]){ //left column
+            win = true;
+        } if (board[0] !== undefined && board[0] === board[3] && board[0] === board[6]){ //left column
             colorLine(0, 3, 6);
-            applyWin();
-        } else if (board[2] !== undefined && board[2] === board[5] && board[2] === board[8]){ //right column
+            win = true;
+        } if (board[2] !== undefined && board[2] === board[5] && board[2] === board[8]){ //right column
             colorLine(2, 5, 8);
-            applyWin();
-        } else if (board[1] !== undefined && board[1] === board[4] && board[1] === board[7]){ //middle column
+            win = true;
+        } if (board[1] !== undefined && board[1] === board[4] && board[1] === board[7]){ //middle column
             colorLine(1, 4, 7);
-            applyWin();
-        } else if (board[0] !== undefined && board[0] === board[4] && board[0] === board[8]){ //diagonal \
+            win = true;
+        } if (board[0] !== undefined && board[0] === board[4] && board[0] === board[8]){ //diagonal \
             colorLine(0, 4, 8);
-            applyWin();
-        } else if (board[2] !== undefined && board[2] === board[4] && board[2] === board[6]){ //diagonal /
+            win = true;
+        } if (board[2] !== undefined && board[2] === board[4] && board[2] === board[6]){ //diagonal /
             colorLine(2, 4, 6);
+            win = true;
+        }
+        if (win) {
             applyWin();
-        } else if (board.includes(undefined) === false) {
+        } else if (!board.includes(undefined)) {
             draw = true;
         }
     };
@@ -116,7 +119,6 @@ const GameBoard = (() => {
             playerOne.addWin();
         }
         displayInfo.updateScore();
-        win = true;
         displayInfo.updateInfo(turn, win, draw);
     }
 
