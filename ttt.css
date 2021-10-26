@@ -1,6 +1,7 @@
 *{
     box-sizing: border-box;
     margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 h1 {
@@ -35,8 +36,8 @@ input {
     margin: auto;
     display: grid;
     aspect-ratio: 1;
-    width: 50%;
-    max-width: 600px;
+    width: 60%;
+    max-width: 500px;
     cursor: pointer;
     grid-template-columns: repeat(3, 1fr);
 }

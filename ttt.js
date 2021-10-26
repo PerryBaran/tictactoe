@@ -9,9 +9,11 @@ const GameBoard = (() => {
         board.length = 9;
         win = false;
         draw = false;
+        startingTurn++
+        turn = startingTurn;
     };
-    
-    const cell = document.querySelectorAll('.cell');
+
+    let startingTurn = 0;
     let turn = 0;
     const currentPlay = () => {
         if (turn % 2 === 0) {
@@ -32,6 +34,7 @@ const GameBoard = (() => {
         };
     };
 
+    const cell = document.querySelectorAll('.cell');
     cell.forEach(event => {
         event.addEventListener('click', () => {
             const cellIndex = event.id.slice(-1);
@@ -135,13 +138,21 @@ const displayInfo =(() => {
         } else if (draw === true) {
             info.innerHTML = "Draw"
         } else if (turn % 2 === 0){
-            info.innerHTML = playerOne.getName() + "'s turn"
+            if (playerOne.getName().slice(-1) === 's') {
+                info.innerHTML = playerOne.getName() + " turn"
+            } else {
+                info.innerHTML = playerOne.getName() + "'s turn"
+            }
         } else {
-            info.innerHTML = playerTwo.getName() + "'s turn"
+            if (playerTwo.getName().slice(-1) === 's') {
+                info.innerHTML = playerTwo.getName() + " turn"
+            } else {
+                info.innerHTML = playerTwo.getName() + "'s turn"
+            }
         }
     }
 
-    updateInfo(0, false);
+    updateInfo(0, false, false);
     updateScore();
 
     return {updateScore, updateInfo}
