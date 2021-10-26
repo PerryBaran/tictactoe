@@ -139,13 +139,13 @@ const displayInfo =(() => {
             info.innerHTML = "Draw"
         } else if (turn % 2 === 0){
             if (playerOne.getName().slice(-1) === 's') {
-                info.innerHTML = playerOne.getName() + " turn"
+                info.innerHTML = playerOne.getName() + "' turn"
             } else {
                 info.innerHTML = playerOne.getName() + "'s turn"
             }
         } else {
             if (playerTwo.getName().slice(-1) === 's') {
-                info.innerHTML = playerTwo.getName() + " turn"
+                info.innerHTML = playerTwo.getName() + "' turn"
             } else {
                 info.innerHTML = playerTwo.getName() + "'s turn"
             }
