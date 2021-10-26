@@ -35,19 +35,37 @@ const GameBoard = (() => {
     };
 
     const cell = document.querySelectorAll('.cell');
+    var waiting = false;
     cell.forEach(event => {
         event.addEventListener('click', () => {
-            const cellIndex = event.id.slice(-1);
-            if (win === true || draw === true) {
-                resetBoard();
-                updateBoard();
-                displayInfo.updateInfo(turn, win, draw);
-            } else if (board[cellIndex] === undefined) {
-                board[cellIndex] = currentPlay();
-                turn++;
-                updateBoard();
-                checkWin();
-                displayInfo.updateInfo(turn, win, draw);
+            if (waiting) {
+                return
+            } else {
+                const cellIndex = event.id.slice(-1);
+                if (win === true || draw === true) {
+                    resetBoard();
+                    updateBoard();
+                    displayInfo.updateInfo(turn, win, draw);
+                } else if (playerTwo.isComputer() && turn % 2 !== 0) {
+                } else if (board[cellIndex] === undefined) {
+                    board[cellIndex] = currentPlay();
+                    turn++;
+                    updateBoard();
+                    checkWin();
+                    displayInfo.updateInfo(turn, win, draw);
+                }
+                if (playerTwo.isComputer() && win === false && draw === false && turn % 2 !== 0) {
+                    waiting = true;
+                    setTimeout(() => {
+                        var play = computerPlay();
+                        board[play] = currentPlay();
+                        turn++;
+                        updateBoard();
+                        checkWin();
+                        displayInfo.updateInfo(turn, win, draw);
+                        waiting = false;
+                    }, 300);   
+                }
             }
         });
     });
@@ -102,22 +120,56 @@ const GameBoard = (() => {
         displayInfo.updateInfo(turn, win, draw);
     }
 
+    const computerPlay = () => {
+        const play = () => Math.floor(Math.random()*9)
+        var currentPlay = play();
+        while (board[currentPlay] !== undefined) {
+            currentPlay = play();
+        } return currentPlay
+    };
+
     updateBoard();
 })();
 
 const Player = (player) => {
     let wins = 0;
+    var computer = false;
     const name = document.getElementById('player' + player)
     const getName = () => name.value;
     const checkWins = () => wins;
     const addWin = () => wins++;
-    return {getName, checkWins, addWin}
+    const changeComputer = () => computer = (computer ? false : true);
+    const isComputer = () => computer; 
+    return {getName, checkWins, addWin, changeComputer, isComputer}
 };
+
 
 const playerOne = Player(1)
 const playerTwo = Player(2)
 
-const displayInfo =(() => {
+const swapComputer = (() => {
+    const button = document.getElementById('switch');
+    button.dataset.index = '0';
+    var savedName = 'Player 2'
+    button.addEventListener('click', () => {
+        const name = document.getElementById('player2')
+        if (button.dataset.index === '0') {
+            savedName = name.value;
+            name.value = 'Computer 1';
+            name.setAttribute('readonly', true)
+            button.innerHTML = 'C';
+            button.dataset.index = '1';
+        } else {
+            name.value = savedName;
+            name.removeAttribute('readonly')
+            button.innerHTML = 'P';
+            button.dataset.index = '0';
+        }
+        playerTwo.changeComputer();
+    });
+})();
+
+const displayInfo = (() => {
     const playerOneScore = document.getElementById('score1');
     const playerTwoScore = document.getElementById('score2');
 
