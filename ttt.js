@@ -1,15 +1,23 @@
-const GameBoard = (() => {
+const gameBoard = (() => {
     var board = [];
     board.length = 9;
     let win = false;
     let draw = false;
+
+    const clearBoard = () => {
+        board = [];
+        board.length = 9;
+        win = false;
+        draw = false;
+        startingTurn++
+        turn = 0;
+    };
 
     const resetBoard = () => {
         board = [];
         board.length = 9;
         win = false;
         draw = false;
-        startingTurn++
         turn = 0;
     };
 
@@ -48,7 +56,7 @@ const GameBoard = (() => {
         event.addEventListener('click', () => {
             if (playerOne.isComputer() && playerTwo.isComputer()){
                 if (win || draw) {
-                    resetBoard();
+                    clearBoard();
                     updateBoard();
                     displayInfo.updateInfo(currentPlay(), win, draw);
                 } 
@@ -65,7 +73,7 @@ const GameBoard = (() => {
             } else {
                 const cellIndex = event.id.slice(-1);
                 if (win || draw) {
-                    resetBoard();
+                    clearBoard();
                     updateBoard();
                     displayInfo.updateInfo(currentPlay(), win, draw);
                 } else if ((playerOne.isComputer() && currentPlay() === 'o') || (playerTwo.isComputer() && currentPlay() === 'x')) {
@@ -146,19 +154,31 @@ const GameBoard = (() => {
     }
 
     const computerPlay = () => {
-        const play = () => Math.floor(Math.random()*9)
-        var placement = play()
-        while (board[placement] !== undefined) {
-            placement = play();
-        } 
-        board[placement] = currentPlay();
-        turn++;
-        updateBoard();
-        checkWin();
-        displayInfo.updateInfo(currentPlay(), win, draw);
+        if(playerOne.isHard() && currentPlay() === 'o' || playerTwo.isHard() && currentPlay() === 'x') {
+            var placement = computerHard.bestMove(board, turn)
+            console.log(currentPlay() + ' ' + placement)
+            board[placement] = currentPlay();
+            turn++;
+            updateBoard();
+            checkWin();
+            displayInfo.updateInfo(currentPlay(), win, draw);
+        } else {
+            const play = () => Math.floor(Math.random()*9)
+            var placement = play()
+            while (board[placement] !== undefined) {
+                placement = play();
+            } 
+            board[placement] = currentPlay();
+            turn++;
+            updateBoard();
+            checkWin();
+            displayInfo.updateInfo(currentPlay(), win, draw);
+        }
     };
 
     updateBoard();
+
+    return {resetBoard, updateBoard, currentPlay}
 })();
 
 const Player = (player) => {
@@ -168,12 +188,13 @@ const Player = (player) => {
     const name = document.getElementById('player' + player)
     const getName = () => name.value;
     const addWin = () => wins++;
+    const resetWin = () => wins = 0;
     const checkWins = () => wins;
     const changeComputer = () => computer = (computer ? false : true);
     const isComputer = () => computer;
     const changeDifficulty = () => hardDifficulty = (hardDifficulty ? false : true);
     const isHard = () => hardDifficulty; 
-    return {getName, checkWins, addWin, changeComputer, isComputer, changeDifficulty, isHard}
+    return {getName, addWin, resetWin, checkWins, changeComputer, isComputer, changeDifficulty, isHard}
 };
 
 
@@ -194,7 +215,9 @@ const swapComputer = (() => {
             switch1.innerHTML = '<img src="ttt/user.png">';
             switch1.dataset.index = '0';
             diff1.style.display = "none";
-        } playerOne.changeComputer();
+        } 
+        playerOne.changeComputer();
+        reset();
     });
     diff1.addEventListener('click', () => {
         if (diff1.dataset.index === '0') {
@@ -203,7 +226,9 @@ const swapComputer = (() => {
         } else {
             diff1.innerHTML = 'EASY';
             diff1.dataset.index = '0';
-        } playerOne.changeDifficulty();
+        } 
+        playerOne.changeDifficulty();
+        reset();
     });
 
     const switch2 = document.getElementById('switch2');
@@ -219,7 +244,9 @@ const swapComputer = (() => {
             switch2.innerHTML = '<img src="ttt/user.png">';
             switch2.dataset.index = '0';
             diff2.style.display = "none";
-        } playerTwo.changeComputer();
+        } 
+        playerTwo.changeComputer();
+        reset();
     });
     diff2.addEventListener('click', () => {
         if (diff2.dataset.index === '0') {
@@ -228,8 +255,19 @@ const swapComputer = (() => {
         } else {
             diff2.innerHTML = 'EASY';
             diff2.dataset.index = '0';
-        } playerTwo.changeDifficulty();    
+        } 
+        playerTwo.changeDifficulty();
+        reset();
     });
+
+    const reset = () => {
+        gameBoard.resetBoard();
+        gameBoard.updateBoard();
+        playerOne.resetWin();
+        playerTwo.resetWin();
+        displayInfo.updateScore();
+        displayInfo.updateInfo(gameBoard.currentPlay(), false, false)
+    }
 })();
 
 const displayInfo = (() => {
@@ -271,4 +309,241 @@ const displayInfo = (() => {
     updateScore();
 
     return {updateScore, updateInfo}
+})();
+
+const computerHard = (() => {
+    var firstPlay = undefined;
+    var secondPlay = undefined;
+    const bestMove = (board, turn) => {
+        if (turn === 0) {
+            firstPlay = gameBoard.currentPlay();
+            return 0;            
+        } if (turn === 1) {
+            secondPlay = gameBoard.currentPlay();
+            if (board[4] === undefined) {
+                return 4;
+            } else {
+                return 0;
+            } 
+        } if (turn === 2) {
+            if (board[4] === undefined) {
+                return 4;
+            } else {
+                return 8;
+            }
+        } if (turn % 2 !== 0) {
+            if (board[4] === secondPlay && board[4] !== undefined){
+                if (board[4] === board[0] && board[8] === undefined){
+                    return 8;
+                } else if (board[4] === board[1] && board[7] === undefined){
+                    return 7;
+                } else if (board[4] === board[2] && board[6] === undefined){
+                    return 6;
+                } else if (board[4] === board[3] && board[5] === undefined){
+                    return 5;
+                } else if (board[4] === board[5] && board[3] === undefined){
+                    return 3;
+                }  else if (board[4] === board[6] && board[2] === undefined){
+                    return 2;
+                }  else if (board[4] === board[7] && board[1] === undefined){
+                    return 1;
+                } else {}
+            } if (board[0] === secondPlay && board[0] !== undefined){
+                if (board[0] === board[1] && board[2] === undefined){
+                    return 2;
+                } else if (board[0] === board[2] && board[1] === undefined){
+                    return 1;
+                } else if (board[0] === board[3] && board[6] === undefined){
+                    return 6;
+                } else if (board[0] === board[6] && board[3] === undefined){
+                    return 3;
+                } else {}
+            } if (board[8] === secondPlay && board[8] !== undefined){
+                if (board[8] === board[6] && board[7] === undefined){
+                    return 7;
+                } else if (board[8] === board[7] && board[6] === undefined){
+                    return 6;
+                } else if (board[8] === board[2] && board[5] === undefined){
+                    return 5;
+                } else if (board[0] === board[5] && board[2] === undefined){
+                    return 2;
+                } else {}
+            } if (board[2] === secondPlay && board[2] !== undefined){
+                if (board[2] === board[1] && board[0] === undefined){
+                    return 0;
+                } else if (board[2] === board[5] && board[8] === undefined){
+                    return 8;
+                } else {}
+            } if (board[6] === secondPlay && board[6] !== undefined){
+                if (board[6] === board[3] && board[0] === undefined){
+                    return 0;
+                } else if (board[6] === board[7] && board[8] === undefined){
+                    return 8;
+                } else {}
+            } if (board[4] !== secondPlay && board[4] !== undefined){
+                if (board[4] === board[0] && board[8] === undefined){
+                    return 8;
+                } else if (board[4] === board[1] && board[7] === undefined){
+                    return 7;
+                } else if (board[4] === board[2] && board[6] === undefined){
+                    return 6;
+                } else if (board[4] === board[3] && board[5] === undefined){
+                    return 5;
+                } else if (board[4] === board[5] && board[3] === undefined){
+                    return 3;
+                }  else if (board[4] === board[6] && board[2] === undefined){
+                    return 2;
+                }  else if (board[4] === board[7] && board[1] === undefined){
+                    return 1;
+                } else {}
+            } if (board[0] !== secondPlay && board[0] !== undefined){
+                if (board[0] === board[1] && board[2] === undefined){
+                    return 2;
+                } else if (board[0] === board[2] && board[1] === undefined){
+                    return 1;
+                } else if (board[0] === board[3] && board[6] === undefined){
+                    return 6;
+                } else if (board[0] === board[6] && board[3] === undefined){
+                    return 3;
+                } else {}
+            } if (board[8] !== secondPlay && board[8] !== undefined){
+                if (board[8] === board[6] && board[7] === undefined){
+                    return 7;
+                } else if (board[8] === board[7] && board[6] === undefined){
+                    return 6;
+                } else if (board[8] === board[2] && board[5] === undefined){
+                    return 5;
+                } else if (board[0] === board[5] && board[2] === undefined){
+                    return 2;
+                } else {}
+            } if (board[2] !== secondPlay && board[2] !== undefined){
+                if (board[2] === board[1] && board[0] === undefined){
+                    return 0;
+                } else if (board[2] === board[5] && board[8] === undefined){
+                    return 8;
+                } else {}
+            } if (board[6] !== secondPlay && board[6] !== undefined){
+                if (board[6] === board[3] && board[0] === undefined){
+                    return 0;
+                } else if (board[6] === board[7] && board[8] === undefined){
+                    return 8;
+                } else {}
+            }
+        } if (turn % 2 === 0) {
+            if (board[4] === firstPlay && board[4] !== undefined){
+                if (board[4] === board[0] && board[8] === undefined){
+                    return 8;
+                } else if (board[4] === board[1] && board[7] === undefined){
+                    return 7;
+                } else if (board[4] === board[2] && board[6] === undefined){
+                    return 6;
+                } else if (board[4] === board[3] && board[5] === undefined){
+                    return 5;
+                } else if (board[4] === board[5] && board[3] === undefined){
+                    return 3;
+                }  else if (board[4] === board[6] && board[2] === undefined){
+                    return 2;
+                }  else if (board[4] === board[7] && board[1] === undefined){
+                    return 1;
+                } else {}
+            } if (board[0] === firstPlay && board[0] !== undefined){
+                if (board[0] === board[1] && board[2] === undefined){
+                    return 2;
+                } else if (board[0] === board[2] && board[1] === undefined){
+                    return 1;
+                } else if (board[0] === board[3] && board[6] === undefined){
+                    return 6;
+                } else if (board[0] === board[6] && board[3] === undefined){
+                    return 3;
+                } else {}
+            } if (board[8] === firstPlay && board[8] !== undefined){
+                if (board[8] === board[6] && board[7] === undefined){
+                    return 7;
+                } else if (board[8] === board[7] && board[6] === undefined){
+                    return 6;
+                } else if (board[8] === board[2] && board[5] === undefined){
+                    return 5;
+                } else if (board[0] === board[5] && board[2] === undefined){
+                    return 2;
+                } else {}
+            } if (board[2] === firstPlay && board[2] !== undefined){
+                if (board[2] === board[1] && board[0] === undefined){
+                    return 0;
+                } else if (board[2] === board[5] && board[8] === undefined){
+                    return 8;
+                } else {}
+            } if (board[6] === firstPlay && board[6] !== undefined){
+                if (board[6] === board[3] && board[0] === undefined){
+                    return 0;
+                } else if (board[6] === board[7] && board[8] === undefined){
+                    return 8;
+                } else {}
+            } if (board[4] !== firstPlay && board[4] !== undefined){
+                if (board[4] === board[0] && board[8] === undefined){
+                    return 8;
+                } else if (board[4] === board[1] && board[7] === undefined){
+                    return 7;
+                } else if (board[4] === board[2] && board[6] === undefined){
+                    return 6;
+                } else if (board[4] === board[3] && board[5] === undefined){
+                    return 5;
+                } else if (board[4] === board[5] && board[3] === undefined){
+                    return 3;
+                }  else if (board[4] === board[6] && board[2] === undefined){
+                    return 2;
+                }  else if (board[4] === board[7] && board[1] === undefined){
+                    return 1;
+                } else {}
+            } if (board[0] !== firstPlay && board[0] !== undefined){
+                if (board[0] === board[1] && board[2] === undefined){
+                    return 2;
+                } else if (board[0] === board[2] && board[1] === undefined){
+                    return 1;
+                } else if (board[0] === board[3] && board[6] === undefined){
+                    return 6;
+                } else if (board[0] === board[6] && board[3] === undefined){
+                    return 3;
+                } else {}
+            } if (board[8] !== firstPlay && board[8] !== undefined){
+                if (board[8] === board[6] && board[7] === undefined){
+                    return 7;
+                } else if (board[8] === board[7] && board[6] === undefined){
+                    return 6;
+                } else if (board[8] === board[2] && board[5] === undefined){
+                    return 5;
+                } else if (board[0] === board[5] && board[2] === undefined){
+                    return 2;
+                } else {}
+            } if (board[2] !== firstPlay && board[2] !== undefined){
+                if (board[2] === board[1] && board[0] === undefined){
+                    return 0;
+                } else if (board[2] === board[5] && board[8] === undefined){
+                    return 8;
+                } else {}
+            } if (board[6] !== firstPlay && board[6] !== undefined){
+                if (board[6] === board[3] && board[0] === undefined){
+                    return 0;
+                } else if (board[6] === board[7] && board[8] === undefined){
+                    return 8;
+                } else {}
+            }
+        } if (board[1] === undefined && (board[0] !== undefined || board[2] !== undefined || board[5] !== undefined || board[8] !== undefined)) {
+            return 1;
+        } if (board[0] === undefined) {
+            return 0;
+        } if (board[3] === undefined) {
+            return 3;
+        } if (board[5] === undefined) {
+            return 5;
+        } if (board[7] === undefined) {
+            return 7;
+        } if (board[2] === undefined) {
+            return 2;
+        } if (board[6] === undefined) {
+            return 6;
+        } if (board[8] === undefined) {
+            return 8;
+        }
+    }
+    return {bestMove}
 })();
