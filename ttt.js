@@ -10,16 +10,24 @@ const GameBoard = (() => {
         win = false;
         draw = false;
         startingTurn++
-        turn = startingTurn;
+        turn = 0;
     };
 
     let startingTurn = 0;
     let turn = 0;
     const currentPlay = () => {
-        if (turn % 2 === 0) {
-            return 'o'
+        if (startingTurn % 2 === 0) {
+            if (turn % 2 === 0) {
+                return 'o'
+            } else {
+                return 'x'
+            }
         } else {
-            return 'x'
+            if (turn % 2 === 0) {
+                return 'x'
+            } else {
+                return 'o'
+            }
         }
     };
 
@@ -38,12 +46,12 @@ const GameBoard = (() => {
     var waiting = false;
     cell.forEach(event => {
         event.addEventListener('click', () => {
-            if (win || draw) {
-                resetBoard();
-                updateBoard();
-                displayInfo.updateInfo(turn, win, draw);
-            }
-            if (playerOne.isComputer() && playerTwo.isComputer()) {
+            if (playerOne.isComputer() && playerTwo.isComputer()){
+                if (win || draw) {
+                    resetBoard();
+                    updateBoard();
+                    displayInfo.updateInfo(currentPlay(), win, draw);
+                } 
                 i = true;
                 while(i) {
                         computerPlay();
@@ -51,27 +59,31 @@ const GameBoard = (() => {
                             i = false;
                         } 
                 }
-            }
-            if (waiting) {
+            } else if (waiting) {
                 return
+
             } else {
                 const cellIndex = event.id.slice(-1);
-                if ((playerOne.isComputer() && turn % 2 === 0) || (playerTwo.isComputer() && turn % 2 !== 0)) {
+                if (win || draw) {
+                    resetBoard();
+                    updateBoard();
+                    displayInfo.updateInfo(currentPlay(), win, draw);
+                } else if ((playerOne.isComputer() && currentPlay() === 'o') || (playerTwo.isComputer() && currentPlay() === 'x')) {
                 } else if (board[cellIndex] === undefined) {
                     board[cellIndex] = currentPlay();
                     turn++;
                     updateBoard();
                     checkWin();
-                    displayInfo.updateInfo(turn, win, draw);
+                    displayInfo.updateInfo(currentPlay(), win, draw);
                 }
-                if (playerOne.isComputer() && win === false && draw === false && turn % 2 === 0) {
+                if (playerOne.isComputer() && win === false && draw === false && currentPlay() === 'o') {
                     waiting = true;
                     setTimeout(() => {
                         computerPlay();
                         waiting = false;
                     }, 300);   
                 }
-                if (playerTwo.isComputer() && win === false && draw === false && turn % 2 !== 0) {
+                if (playerTwo.isComputer() && win === false && draw === false && currentPlay() === 'x') {
                     waiting = true;
                     setTimeout(() => {
                         computerPlay();
@@ -107,8 +119,7 @@ const GameBoard = (() => {
         } if (board[2] !== undefined && board[2] === board[4] && board[2] === board[6]){ //diagonal /
             colorLine(2, 4, 6);
             win = true;
-        }
-        if (win) {
+        } if (win) {
             applyWin();
         } else if (!board.includes(undefined)) {
             draw = true;
@@ -125,13 +136,13 @@ const GameBoard = (() => {
     }
 
     const applyWin = () => {
-        if (turn % 2 === 0) {
+        if (currentPlay() === 'o') {
             playerTwo.addWin();
         } else {
             playerOne.addWin();
         }
         displayInfo.updateScore();
-        displayInfo.updateInfo(turn, win, draw);
+        displayInfo.updateInfo(currentPlay(), win, draw);
     }
 
     const computerPlay = () => {
@@ -144,7 +155,7 @@ const GameBoard = (() => {
         turn++;
         updateBoard();
         checkWin();
-        displayInfo.updateInfo(turn, win, draw);
+        displayInfo.updateInfo(currentPlay(), win, draw);
     };
 
     updateBoard();
@@ -153,13 +164,16 @@ const GameBoard = (() => {
 const Player = (player) => {
     let wins = 0;
     var computer = false;
+    var hardDifficulty = false;
     const name = document.getElementById('player' + player)
     const getName = () => name.value;
-    const checkWins = () => wins;
     const addWin = () => wins++;
+    const checkWins = () => wins;
     const changeComputer = () => computer = (computer ? false : true);
-    const isComputer = () => computer; 
-    return {getName, checkWins, addWin, changeComputer, isComputer}
+    const isComputer = () => computer;
+    const changeDifficulty = () => hardDifficulty = (hardDifficulty ? false : true);
+    const isHard = () => hardDifficulty; 
+    return {getName, checkWins, addWin, changeComputer, isComputer, changeDifficulty, isHard}
 };
 
 
@@ -167,32 +181,54 @@ const playerOne = Player(1)
 const playerTwo = Player(2)
 
 const swapComputer = (() => {
-    const button1 = document.getElementById('switch1');
-    button1.dataset.index = '0';
-    button1.addEventListener('click', () => {
-        const name = document.getElementById('player1')
-        if (button1.dataset.index === '0') {
-            button1.innerHTML = '<img src="ttt/computer.png">';
-            button1.dataset.index = '1';
+    const switch1 = document.getElementById('switch1');
+    switch1.dataset.index = '0';
+    const diff1 = document.getElementById('diff1')
+    diff1.dataset.index = '0';
+    switch1.addEventListener('click', () => {
+        if (switch1.dataset.index === '0') {
+            switch1.innerHTML = '<img src="ttt/computer.png">';
+            switch1.dataset.index = '1';
+            diff1.style.display = "inline-flex";
         } else {
-            button1.innerHTML = '<img src="ttt/user.png">';
-            button1.dataset.index = '0';
-        }
-        playerOne.changeComputer();
+            switch1.innerHTML = '<img src="ttt/user.png">';
+            switch1.dataset.index = '0';
+            diff1.style.display = "none";
+        } playerOne.changeComputer();
+    });
+    diff1.addEventListener('click', () => {
+        if (diff1.dataset.index === '0') {
+            diff1.innerHTML = 'HARD';
+            diff1.dataset.index = '1';
+        } else {
+            diff1.innerHTML = 'EASY';
+            diff1.dataset.index = '0';
+        } playerOne.changeDifficulty();
     });
 
-    const button2 = document.getElementById('switch2');
-    button2.dataset.index = '0';
-    button2.addEventListener('click', () => {
-        const name = document.getElementById('player2')
-        if (button2.dataset.index === '0') {
-            button2.innerHTML = '<img src="ttt/computer.png">';
-            button2.dataset.index = '1';
+    const switch2 = document.getElementById('switch2');
+    switch2.dataset.index = '0';
+    const diff2 = document.getElementById('diff2')
+    diff2.dataset.index = '0';
+    switch2.addEventListener('click', () => {
+        if (switch2.dataset.index === '0') {
+            switch2.innerHTML = '<img src="ttt/computer.png">';
+            switch2.dataset.index = '1';
+            diff2.style.display = "inline-flex";
         } else {
-            button2.innerHTML = '<img src="ttt/user.png">';
-            button2.dataset.index = '0';
-        }
-        playerTwo.changeComputer();
+            switch2.innerHTML = '<img src="ttt/user.png">';
+            switch2.dataset.index = '0';
+            diff2.style.display = "none";
+        } playerTwo.changeComputer();
+    });
+    diff2.addEventListener('click', () => {
+        if (diff2.dataset.index === '0') {
+            diff2.innerHTML = 'HARD';
+            diff2.dataset.index = '1';
+        } else {
+            diff2.innerHTML = 'EASY';
+            diff2.dataset.index = '0';
+        } playerTwo.changeDifficulty();    
     });
 })();
 
@@ -207,16 +243,16 @@ const displayInfo = (() => {
 
     const info = document.getElementById('info')
 
-    const updateInfo = (turn, win, draw) => {
+    const updateInfo = (play, win, draw) => {
         if (win === true) {
-            if (turn % 2 === 0) {
+            if (play === 'o') {
                 info.innerHTML = playerTwo.getName() + " wins"
             } else {
                 info.innerHTML = playerOne.getName() + " wins"
             }
         } else if (draw === true) {
             info.innerHTML = "Draw"
-        } else if (turn % 2 === 0){
+        } else if (play  === 'o'){
             if (playerOne.getName().slice(-1) === 's') {
                 info.innerHTML = playerOne.getName() + "' turn"
             } else {
@@ -231,7 +267,7 @@ const displayInfo = (() => {
         }
     }
 
-    updateInfo(0, false, false);
+    updateInfo('o', false, false);
     updateScore();
 
     return {updateScore, updateInfo}
