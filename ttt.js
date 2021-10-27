@@ -316,9 +316,9 @@ const computerHard = (() => {
 
     const checkForWin = (board, position1, position2, position3, play, guard) => {
         if (guard) {
-            return (board[position1] !== play && board[position1] === board[position2] && board[position3] === undefined)
+            return (board[position1] !== play && board[position1] !== undefined && board[position1] === board[position2] && board[position3] === undefined)
         } else {
-            return (board[position1] === play && board[position1] === board[position2] && board[position3] === undefined)
+            return (board[position1] === play && board[position1] !== undefined && board[position1] === board[position2] && board[position3] === undefined)
         }
     }
         
@@ -420,11 +420,11 @@ const computerHard = (() => {
             if (checkForWin(board, 6, 3, 0, firstPlay, true)) {return 0;}
             if (checkForWin(board, 6, 7, 8, firstPlay, true)) {return 8;}
         }
-        if (board[1] === undefined && board[7] !== undefined && (board[0] !== undefined || board[2] !== undefined || board[5] !== undefined || board[8] !== undefined)) {
+        if (board[1] === undefined && board[7] === undefined && (board[0] !== undefined || board[2] !== undefined || board[5] !== undefined || board[8] !== undefined)) {
             return 1;
         } if (board[0] === undefined) {
             return 0;
-        } if (board[8] === undefined) {
+        } if (board[8] === undefined && board[7] === undefined) {
             return 8;
         } if (board[2] === undefined) {
             return 2;
