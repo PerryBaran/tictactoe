@@ -313,6 +313,7 @@ const displayInfo = (() => {
 const computerHard = (() => {
     var firstPlay = undefined;
     var secondPlay = undefined;
+    var play = undefined;
 
     const checkForWin = (board, position1, position2, position3, play, guard) => {
         console.log(position1, position2, position3, guard)
@@ -343,84 +344,36 @@ const computerHard = (() => {
             }
         }
         if (turn % 2 !== 0) {
-            if (checkForWin(board, 4, 0, 8, secondPlay, false)) {return 8;}
-            if (checkForWin(board, 4, 1, 7, secondPlay, false)) {return 7;}
-            if (checkForWin(board, 4, 2, 6, secondPlay, false)) {return 6;}
-            if (checkForWin(board, 4, 3, 5, secondPlay, false)) {return 5;}
-            if (checkForWin(board, 4, 5, 3, secondPlay, false)) {return 3;}
-            if (checkForWin(board, 4, 6, 2, secondPlay, false)) {return 2;}
-            if (checkForWin(board, 4, 7, 1, secondPlay, false)) {return 1;}
-            if (checkForWin(board, 0, 1, 2, secondPlay, false)) {return 2;}
-            if (checkForWin(board, 0, 2, 1, secondPlay, false)) {return 1;}
-            if (checkForWin(board, 0, 3, 6, secondPlay, false)) {return 6;}
-            if (checkForWin(board, 0, 6, 3, secondPlay, false)) {return 3;}
-            if (checkForWin(board, 8, 6, 7, secondPlay, false)) {return 7;}
-            if (checkForWin(board, 8, 7, 6, secondPlay, false)) {return 6;}
-            if (checkForWin(board, 8, 2, 5, secondPlay, false)) {return 5;}
-            if (checkForWin(board, 8, 5, 2, secondPlay, false)) {return 2;}
-            if (checkForWin(board, 2, 1, 0, secondPlay, false)) {return 0;}
-            if (checkForWin(board, 2, 5, 8, secondPlay, false)) {return 8;}
-            if (checkForWin(board, 6, 3, 0, secondPlay, false)) {return 0;}
-            if (checkForWin(board, 6, 7, 8, secondPlay, false)) {return 8;}     
-            if (checkForWin(board, 4, 0, 8, secondPlay, true)) {return 8;}
-            if (checkForWin(board, 4, 1, 7, secondPlay, true)) {return 7;}
-            if (checkForWin(board, 4, 2, 6, secondPlay, true)) {return 6;}
-            if (checkForWin(board, 4, 3, 5, secondPlay, true)) {return 5;}
-            if (checkForWin(board, 4, 5, 3, secondPlay, true)) {return 3;}
-            if (checkForWin(board, 4, 6, 2, secondPlay, true)) {return 2;}
-            if (checkForWin(board, 4, 7, 1, secondPlay, true)) {return 1;}
-            if (checkForWin(board, 0, 1, 2, secondPlay, true)) {return 2;}
-            if (checkForWin(board, 0, 2, 1, secondPlay, true)) {return 1;}
-            if (checkForWin(board, 0, 3, 6, secondPlay, true)) {return 6;}
-            if (checkForWin(board, 0, 6, 3, secondPlay, true)) {return 3;}
-            if (checkForWin(board, 8, 6, 7, secondPlay, true)) {return 7;}
-            if (checkForWin(board, 8, 7, 6, secondPlay, true)) {return 6;}
-            if (checkForWin(board, 8, 2, 5, secondPlay, true)) {return 5;}
-            if (checkForWin(board, 8, 5, 2, secondPlay, true)) {return 2;}
-            if (checkForWin(board, 2, 1, 0, secondPlay, true)) {return 0;}
-            if (checkForWin(board, 2, 5, 8, secondPlay, true)) {return 8;}
-            if (checkForWin(board, 6, 3, 0, secondPlay, true)) {return 0;}
-            if (checkForWin(board, 6, 7, 8, secondPlay, true)) {return 8;}
-        } else { 
-            if (checkForWin(board, 4, 0, 8, firstPlay, false)) {return 8;}
-            if (checkForWin(board, 4, 1, 7, firstPlay, false)) {return 7;}
-            if (checkForWin(board, 4, 2, 6, firstPlay, false)) {return 6;}
-            if (checkForWin(board, 4, 3, 5, firstPlay, false)) {return 5;}
-            if (checkForWin(board, 4, 5, 3, firstPlay, false)) {return 3;}
-            if (checkForWin(board, 4, 6, 2, firstPlay, false)) {return 2;}
-            if (checkForWin(board, 4, 7, 1, firstPlay, false)) {return 1;}
-            if (checkForWin(board, 0, 1, 2, firstPlay, false)) {return 2;}
-            if (checkForWin(board, 0, 2, 1, firstPlay, false)) {return 1;}
-            if (checkForWin(board, 0, 3, 6, firstPlay, false)) {return 6;}
-            if (checkForWin(board, 0, 6, 3, firstPlay, false)) {return 3;}
-            if (checkForWin(board, 8, 6, 7, firstPlay, false)) {return 7;}
-            if (checkForWin(board, 8, 7, 6, firstPlay, false)) {return 6;}
-            if (checkForWin(board, 8, 2, 5, firstPlay, false)) {return 5;}
-            if (checkForWin(board, 8, 5, 2, firstPlay, false)) {return 2;}
-            if (checkForWin(board, 2, 1, 0, firstPlay, false)) {return 0;}
-            if (checkForWin(board, 2, 5, 8, firstPlay, false)) {return 8;}
-            if (checkForWin(board, 6, 3, 0, firstPlay, false)) {return 0;}
-            if (checkForWin(board, 6, 7, 8, firstPlay, false)) {return 8;}    
-            if (checkForWin(board, 4, 0, 8, firstPlay, true)) {return 8;}
-            if (checkForWin(board, 4, 1, 7, firstPlay, true)) {return 7;}
-            if (checkForWin(board, 4, 2, 6, firstPlay, true)) {return 6;}
-            if (checkForWin(board, 4, 3, 5, firstPlay, true)) {return 5;}
-            if (checkForWin(board, 4, 5, 3, firstPlay, true)) {return 3;}
-            if (checkForWin(board, 4, 6, 2, firstPlay, true)) {return 2;}
-            if (checkForWin(board, 4, 7, 1, firstPlay, true)) {return 1;}
-            if (checkForWin(board, 0, 1, 2, firstPlay, true)) {return 2;}
-            if (checkForWin(board, 0, 2, 1, firstPlay, true)) {return 1;}
-            if (checkForWin(board, 0, 3, 6, firstPlay, true)) {return 6;}
-            if (checkForWin(board, 0, 6, 3, firstPlay, true)) {return 3;}
-            if (checkForWin(board, 8, 6, 7, firstPlay, true)) {return 7;}
-            if (checkForWin(board, 8, 7, 6, firstPlay, true)) {return 6;}
-            if (checkForWin(board, 8, 2, 5, firstPlay, true)) {return 5;}
-            if (checkForWin(board, 8, 5, 2, firstPlay, true)) {return 2;}
-            if (checkForWin(board, 2, 1, 0, firstPlay, true)) {return 0;}
-            if (checkForWin(board, 2, 5, 8, firstPlay, true)) {return 8;}
-            if (checkForWin(board, 6, 3, 0, firstPlay, true)) {return 0;}
-            if (checkForWin(board, 6, 7, 8, firstPlay, true)) {return 8;}
+            play = secondPlay;
+        } else {
+            play = firstPlay;
         }
+        for (i = 0; i < 2; i++){
+            if (i === 0) {
+                guard = false;
+            } else {
+                guard = true;
+            }
+            if (checkForWin(board, 4, 0, 8, play, guard)) {return 8;}
+            if (checkForWin(board, 4, 1, 7, play, guard)) {return 7;}
+            if (checkForWin(board, 4, 2, 6, play, guard)) {return 6;}
+            if (checkForWin(board, 4, 3, 5, play, guard)) {return 5;}
+            if (checkForWin(board, 4, 5, 3, play, guard)) {return 3;}
+            if (checkForWin(board, 4, 6, 2, play, guard)) {return 2;}
+            if (checkForWin(board, 4, 7, 1, play, guard)) {return 1;}
+            if (checkForWin(board, 0, 1, 2, play, guard)) {return 2;}
+            if (checkForWin(board, 0, 2, 1, play, guard)) {return 1;}
+            if (checkForWin(board, 0, 3, 6, play, guard)) {return 6;}
+            if (checkForWin(board, 0, 6, 3, play, guard)) {return 3;}
+            if (checkForWin(board, 8, 6, 7, play, guard)) {return 7;}
+            if (checkForWin(board, 8, 7, 6, play, guard)) {return 6;}
+            if (checkForWin(board, 8, 2, 5, play, guard)) {return 5;}
+            if (checkForWin(board, 8, 5, 2, play, guard)) {return 2;}
+            if (checkForWin(board, 2, 1, 0, play, guard)) {return 0;}
+            if (checkForWin(board, 2, 5, 8, play, guard)) {return 8;}
+            if (checkForWin(board, 6, 3, 0, play, guard)) {return 0;}
+            if (checkForWin(board, 6, 7, 8, play, guard)) {return 8;}   
+        }  
         if (board[1] === undefined && board[7] === undefined && (board[0] !== undefined || board[2] !== undefined || board[5] !== undefined || board[8] !== undefined)) {
             return 1;
         } if (board[5] === undefined && board[3] === undefined && (board[0] !== undefined || board[7] !== undefined)) {
