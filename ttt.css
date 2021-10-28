@@ -174,11 +174,13 @@ img {
 }
 
 .attribution {
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    bottom: 0px;
     width: 100%;
     text-align: center;
     margin-top: 0.6em;
+    margin-bottom: 0.6em;
+    overflow: visible;
 }
 
 a {
@@ -229,10 +231,6 @@ a:hover {
 @media screen and (max-width: 450px) {
     .buttonText {
         font-size: 0.6rem;
-    }
-
-    h1 {
-        font-size: 2rem;
     }
 }
 
