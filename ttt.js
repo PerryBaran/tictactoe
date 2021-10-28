@@ -64,8 +64,7 @@ const gameBoard = (() => {
                     clearBoard();
                     updateBoard();
                     displayInfo.updateInfo(currentPlay(), win, draw);
-                } 
-                i = true;
+                } i = true;
                 while(i) {
                         computerPlay();
                         if (win || draw) {
@@ -196,10 +195,11 @@ const Player = (player) => {
     let wins = 0;
     var computer = false;
     var hardDifficulty = false;
-    const name = document.getElementById('player' + player)
+    const name = document.getElementById('player' + player);
     const color = document.getElementById('color' + player);
     const getName = () => name.value;
     const getColor = () => color.value;
+    name.style.color = getColor();
     const addWin = () => wins++;
     const resetWin = () => wins = 0;
     const checkWins = () => wins;
@@ -209,8 +209,6 @@ const Player = (player) => {
     const isHard = () => hardDifficulty; 
     return {getName, getColor, addWin, resetWin, checkWins, changeComputer, isComputer, changeDifficulty, isHard}
 };
-
-
 const playerOne = Player(1)
 const playerTwo = Player(2)
 
@@ -286,7 +284,6 @@ const swapComputer = (() => {
 const displayInfo = (() => {
     const playerOneScore = document.getElementById('score1');
     const playerTwoScore = document.getElementById('score2');
-
     const updateScore = () => {
         playerOneScore.innerHTML = playerOne.checkWins();
         updateColor(playerOneScore, playerOne, 1);
@@ -295,7 +292,6 @@ const displayInfo = (() => {
     }
 
     const info = document.getElementById('info')
-
     const updateInfo = (play, win, draw) => {
         if (win === true) {
             if (play === 'o') {
@@ -331,11 +327,15 @@ const displayInfo = (() => {
         event.style.textShadow = '0 0 '+ shadow + 'em ' + player.getColor();
     }
 
+    const name1 = document.getElementById('player1')
+    const name2 = document.getElementById('player2')
     const colorPicker = document.querySelectorAll('.color');
     colorPicker.forEach(event => {
         event.addEventListener('input', () => {
             updateScore();
             updateInfo(gameBoard.currentPlay(), gameBoard.winTrue(), gameBoard.drawTrue());
+            name1.style.color = playerOne.getColor();
+            name2.style.color = playerTwo.getColor();
             if (gameBoard.winTrue()) {
                 gameBoard.colorLine(gameBoard.checkLastWin(0), gameBoard.checkLastWin(1), gameBoard.checkLastWin(2));
             }
@@ -367,8 +367,7 @@ const computerHard = (() => {
         } else {
             return (board[position1] === play && board[position1] !== undefined && board[position1] === board[position2] && board[position3] === undefined)
         }
-    }
-        
+    } 
 
     const bestMove = (board, turn) => {
         if (turn === 0) {
@@ -387,13 +386,11 @@ const computerHard = (() => {
             } else {
                 return 8;
             }
-        }
-        if (turn % 2 !== 0) {
+        } if (turn % 2 !== 0) {
             play = secondPlay;
         } else {
             play = firstPlay;
-        }
-        for (i = 0; i < 2; i++){
+        } for (i = 0; i < 2; i++){
             if (i === 0) {
                 guard = false;
             } else {
@@ -418,8 +415,7 @@ const computerHard = (() => {
             if (checkForWin(board, 2, 5, 8, play, guard)) {return 8;}
             if (checkForWin(board, 6, 3, 0, play, guard)) {return 0;}
             if (checkForWin(board, 6, 7, 8, play, guard)) {return 8;}   
-        }  
-        if (board[1] === undefined && board[7] === undefined && (board[0] !== undefined || board[2] !== undefined || board[5] !== undefined || board[8] !== undefined)) {
+        }  if (board[1] === undefined && board[7] === undefined && (board[0] !== undefined || board[2] !== undefined || board[5] !== undefined || board[8] !== undefined)) {
             return 1;
         } if (board[5] === undefined && board[3] === undefined && (board[0] !== undefined || board[7] !== undefined)) {
             return 5;
@@ -437,6 +433,5 @@ const computerHard = (() => {
             return 6;
         }
     }
-
     return {bestMove}
 })();

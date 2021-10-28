@@ -36,17 +36,21 @@ input {
     border: 0.05em solid white;
     border-radius: 0.1em;
     font-size: 2rem;
-    height: 50px;
     width: 60%;
+    aspect-ratio: 6 / 1;
+    max-height: 50px;;
     display: inline-flex;
     flex-grow: 1;
     text-align: center;
+    overflow:scroll;
+    font-size: 3vh;
 }
 
 button {
     display: inline-flex;
-    width: 50px;
-    height: 50px;
+    max-width: 50px;
+    width: 10%;
+    aspect-ratio: 1;
     vertical-align:bottom;
     justify-content: center;
     cursor: pointer;
@@ -54,11 +58,14 @@ button {
     color: black;
     border: none;
     border-radius: 0.25em;
+    font-size: 1vw;
 }
 
 img {
-    height: 40px;
-    margin-top: 3px;
+    width: 100%;
+    max-width: 40px;
+    aspect-ratio: 1;
+    margin: 5px;
     background: white;
 }
 
@@ -70,12 +77,15 @@ img {
 
 .color {
     display: inline-flex;
-    width: 50px;
-    height: 50px;
+    max-width: 50px;
+    height:unset;
+    width: 10%;
+    aspect-ratio: 1;
     vertical-align:bottom;
     justify-content: center;
     cursor: pointer;
     border: none;
+    overflow: hidden;
 }
 
 #gameboard {
@@ -151,3 +161,14 @@ a {
 a:hover {
     text-shadow: 0 0 0.5em white;
 }
+
+@media screen and (max-width: 470px) {
+    .cell {
+        font-size: 3em;
+    }
+
+    input {
+        font-size: 2vh;
+    }
+}
+
