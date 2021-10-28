@@ -174,13 +174,11 @@ img {
 }
 
 .attribution {
-    position: fixed;
-    bottom: 0px;
+    bottom: 5px;
     width: 100%;
+    margin: auto;
     text-align: center;
     margin-top: 0.6em;
-    margin-bottom: 0.6em;
-    overflow: visible;
 }
 
 a {
