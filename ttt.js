@@ -378,10 +378,10 @@ const computerHard = (() => {
             return 1;
         } if (board[5] === undefined && board[3] === undefined && (board[0] !== undefined || board[7] !== undefined)) {
             return 5;
+        } if (board[8] === undefined && board[5] !== undefined && board[7] !== undefined) {
+            return 8;
         } if (board[0] === undefined) {
             return 0;
-        } if (board[8] === undefined && board[7] === undefined) {
-            return 8;
         } if (board[2] === undefined) {
             return 2;
         } if (board[7] === undefined) {
