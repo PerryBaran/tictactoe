@@ -37,8 +37,7 @@ input {
     border-radius: 0.1em;
     font-size: 2rem;
     width: 60%;
-    aspect-ratio: 6 / 1;
-    max-height: 50px;;
+    height: 50px;
     display: inline-flex;
     flex-grow: 1;
     text-align: center;
@@ -49,7 +48,7 @@ input {
 button {
     display: inline-flex;
     max-width: 50px;
-    width: 10%;
+    width: 20%;
     aspect-ratio: 1;
     vertical-align:bottom;
     justify-content: center;
@@ -58,7 +57,7 @@ button {
     color: black;
     border: none;
     border-radius: 0.25em;
-    font-size: 1vw;
+    font-size: 1rem;
 }
 
 img {
@@ -79,7 +78,8 @@ img {
     display: inline-flex;
     max-width: 50px;
     height:unset;
-    width: 10%;
+    max-width: 50px;
+    width: 20%;
     aspect-ratio: 1;
     vertical-align:bottom;
     justify-content: center;
@@ -162,13 +162,30 @@ a:hover {
     text-shadow: 0 0 0.5em white;
 }
 
-@media screen and (max-width: 470px) {
+
+@media screen and (max-width: 900px) {
+    input {
+        margin: auto;
+        margin-top: 5px;
+        display: flex;
+        font-size: 2vh;
+        height: 30px;
+    }
+
+    .score {
+        font-size: 8rem;
+    }
+    
+}
+
+@media screen and (max-width: 630px) {
     .cell {
         font-size: 3em;
     }
 
-    input {
-        font-size: 2vh;
+    .score {
+        font-size: 6rem;
     }
+    
 }
 
