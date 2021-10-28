@@ -7,7 +7,6 @@
     -webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
 }
 
-
 h1 {
     margin: auto;
     text-align: center;
@@ -80,7 +79,12 @@ img {
 
 .glowGreen {
     background: rgb(2, 240, 2);
-    box-shadow: 0 0 1em green;
+    box-shadow: 0 0 1em rgb(2, 240, 2);
+}
+
+.glowOrange {
+    background: rgb(211, 121, 3);
+    box-shadow: 0 0 1em rgb(211, 121, 3);
 }
 
 .glowRed {

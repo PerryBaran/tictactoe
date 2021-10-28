@@ -165,8 +165,14 @@ const gameBoard = (() => {
     }
 
     const computerPlay = () => {
-        if(playerOne.isHard() && currentPlay() === 'o' || playerTwo.isHard() && currentPlay() === 'x') {
-            var placement = computerHard.bestMove(board, turn)
+        if((playerOne.isHard() > 0) && currentPlay() === 'o' || (playerTwo.isHard() > 0) && currentPlay() === 'x') {
+            var currentPlayer = undefined;
+            if (currentPlay() === 'o') {
+                currentPlayer = playerOne;
+            } else {
+                currentPlayer = playerTwo;
+            }
+            var placement = computerHard.bestMove(board, turn, currentPlayer.isHard())
             board[placement] = currentPlay();
             turn++;
             updateBoard();
@@ -194,7 +200,7 @@ const gameBoard = (() => {
 const Player = (player) => {
     let wins = 0;
     var computer = false;
-    var hardDifficulty = false;
+    var hardDifficulty = 0;
     const name = document.getElementById('player' + player);
     const color = document.getElementById('color' + player);
     const getName = () => name.value;
@@ -205,7 +211,13 @@ const Player = (player) => {
     const checkWins = () => wins;
     const changeComputer = () => computer = (computer ? false : true);
     const isComputer = () => computer;
-    const changeDifficulty = () => hardDifficulty = (hardDifficulty ? false : true);
+    const changeDifficulty = () => { 
+        if (hardDifficulty === 2) {               
+            hardDifficulty = 0;                          
+        } else {                           
+            hardDifficulty++
+        }
+    }                            
     const isHard = () => hardDifficulty; 
     return {getName, getColor, addWin, resetWin, checkWins, changeComputer, isComputer, changeDifficulty, isHard}
 };
@@ -232,8 +244,13 @@ const swapComputer = (() => {
     });
     diff1.addEventListener('click', () => {
         if (diff1.dataset.index === '0') {
-            diff1.innerHTML = '<div class="buttonText">HARD</div>';
+            diff1.innerHTML = '<div class="buttonText">FAIR</div>';
             diff1.dataset.index = '1';
+            diff1.classList.add('glowOrange');
+        } else if (diff1.dataset.index === '1') {
+            diff1.innerHTML = '<div class="buttonText">HARD</div>';
+            diff1.dataset.index = '2';
+            diff1.classList.remove('glowOrange');
             diff1.classList.add('glowRed');
         } else {
             diff1.innerHTML = '<div class="buttonText">EASY</div>';
@@ -263,8 +280,13 @@ const swapComputer = (() => {
     });
     diff2.addEventListener('click', () => {
         if (diff2.dataset.index === '0') {
-            diff2.innerHTML = '<div class="buttonText">HARD</div>';
+            diff2.innerHTML = '<div class="buttonText">FAIR</div>';
             diff2.dataset.index = '1';
+            diff2.classList.add('glowOrange');
+        } else if (diff2.dataset.index === '1') {
+            diff2.innerHTML = '<div class="buttonText">HARD</div>';
+            diff2.dataset.index = '2';
+            diff2.classList.remove('glowOrange');
             diff2.classList.add('glowRed');
         } else {
             diff2.innerHTML = '<div class="buttonText">EASY</div>';
@@ -365,7 +387,6 @@ const computerHard = (() => {
     var play = undefined;
 
     const checkForWin = (board, position1, position2, position3, play, guard) => {
-        console.log(position1, position2, position3, guard)
         if (guard) {
             return (board[position1] !== play && board[position1] !== undefined && board[position1] === board[position2] && board[position3] === undefined)
         } else {
@@ -373,18 +394,25 @@ const computerHard = (() => {
         }
     } 
 
-    const bestMove = (board, turn) => {
+    const playMove = () => Math.floor(Math.random()*9)
+    var placement = playMove();
+
+    const bestMove = (board, turn, hard) => {
         if (turn === 0) {
             firstPlay = gameBoard.currentPlay();
-            return 0;            
+            if (hard === 2) {
+                return 0;   
+            }         
         } if (turn === 1) {
             secondPlay = gameBoard.currentPlay();
-            if (board[4] === undefined) {
-                return 4;
-            } else {
-                return 0;
-            } 
-        } if (turn === 2) {
+            if (hard == 2) {
+                if (board[4] === undefined) {
+                    return 4;
+                } else {
+                    return 0;
+                } 
+            }
+        } if (turn === 2 && hard === 2) {
             if (board[4] === undefined) {
                 return 4;
             } else {
@@ -419,7 +447,7 @@ const computerHard = (() => {
             if (checkForWin(board, 2, 5, 8, play, guard)) {return 8;}
             if (checkForWin(board, 6, 3, 0, play, guard)) {return 0;}
             if (checkForWin(board, 6, 7, 8, play, guard)) {return 8;}   
-        }  if  (turn === 3){
+        } if  (turn === 3 && hard === 2){
             if (board[0] !== undefined && board[0] !== secondPlay) {
                 if (board[5] !== undefined || board[7] !== undefined) {
                     return 8;
@@ -447,7 +475,7 @@ const computerHard = (() => {
             } if (board[4] !== undefined && board[4] !== secondPlay && board[8] === board[4]) {
                 return 2;
             }
-        } if (turn == 4) {
+        } if (turn == 4 && hard === 2) {
             if (board[0] === board[4] && board[8] !== undefined) {
                 if (board[1] !== undefined) {
                     return 3;
@@ -455,21 +483,10 @@ const computerHard = (() => {
                     return 1
                 }
             }
-        } if (board[1] === undefined) {
-            return 1;
-        } if (board[2] === undefined) {
-            return 2;
-        } if (board[3] === undefined) {
-            return 3;
-        } if (board[5] === undefined) {
-            return 5;
-        } if (board[6] === undefined) {
-            return 6;
-        } if (board[7] === undefined) {
-            return 7;
-        } if (board[8] === undefined) {
-            return 8;
         }
+        while (board[placement] !== undefined) {
+            placement = playMove();
+        } return placement;
     }
     return {bestMove}
 })();
