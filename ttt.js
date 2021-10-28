@@ -394,8 +394,11 @@ const computerHard = (() => {
         }
     } 
 
+    const checkForAdvtange = (board, empty1, empty2, closed, play) => {
+        return (board[empty1] === undefined && board[empty2] === undefined && board[closed] === play )
+    }
+
     const playMove = () => Math.floor(Math.random()*9)
-    var placement = playMove();
 
     const bestMove = (board, turn, hard) => {
         if (turn === 0) {
@@ -449,22 +452,32 @@ const computerHard = (() => {
             if (checkForWin(board, 6, 7, 8, play, guard)) {return 8;}   
         } if  (turn === 3 && hard === 2){
             if (board[0] !== undefined && board[0] !== secondPlay) {
-                if (board[5] !== undefined || board[7] !== undefined) {
-                    return 8;
+                if (board[5] !== undefined) {
+                    return 2;
+                } else if (board[7] !== undefined) {
+                    return 6;
                 } else if (board[8] !== undefined) {
                     return 1;
                 }
             } if (board[1] !== undefined) {
-                if (board[3] !== undefined || board[7] !== undefined) {
+                if (board[3] !== undefined || board[6] !== undefined || board[7] !== undefined) {
                     return 0;
-                } else if (board[5] !== undefined) {
+                } else if (board[5] !== undefined || board[8] !== undefined) {
                     return 2;
                 }
             } if (board[2] !== undefined) {   
-                if (board[3] !== undefined || board[7] !== undefined) {
-                    return 6;
+                if (board[3] !== undefined) {
+                    return 0;
                 } else if (board[6] !== undefined) {
                     return 7;
+                } else if (board[7] !== undefined) {
+                    return 8;
+                }
+            } if (board[3] !== undefined) {
+                if (board[8] !== undefined) {
+                    return 6;
+                } else if (board[5] !== undefined || board[8] !== undefined) {
+                    return 2;
                 }
             } if (board[7] !== undefined) {
                 if (board[3] !== undefined) {
@@ -483,7 +496,25 @@ const computerHard = (() => {
                     return 1
                 }
             }
+        } if (hard === 2) {
+            if (checkForAdvtange(board, 1, 2, 0, play)) {return 1}
+            if (checkForAdvtange(board, 3, 6, 0, play)) {return 3}
+            if (checkForAdvtange(board, 0, 2, 1, play)) {return 0}
+            if (checkForAdvtange(board, 0, 1, 2, play)) {return 0}
+            if (checkForAdvtange(board, 5, 8, 2, play)) {return 5}
+            if (checkForAdvtange(board, 0, 6, 3, play)) {return 0}
+            if (checkForAdvtange(board, 2, 8, 5, play)) {return 2}
+            if (checkForAdvtange(board, 0, 8, 4, play)) {return 0}
+            if (checkForAdvtange(board, 1, 7, 4, play)) {return 1}
+            if (checkForAdvtange(board, 2, 6, 4, play)) {return 2}
+            if (checkForAdvtange(board, 3, 5, 4, play)) {return 3}
+            if (checkForAdvtange(board, 0, 3, 6, play)) {return 0}
+            if (checkForAdvtange(board, 7, 8, 6, play)) {return 7}
+            if (checkForAdvtange(board, 6, 8, 7, play)) {return 6}
+            if (checkForAdvtange(board, 2, 5, 8, play)) {return 2}
+            if (checkForAdvtange(board, 6, 7, 8, play)) {return 6}
         }
+        var placement = playMove();
         while (board[placement] !== undefined) {
             placement = playMove();
         } return placement;
