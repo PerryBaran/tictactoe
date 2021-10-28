@@ -336,7 +336,9 @@ const displayInfo = (() => {
         event.addEventListener('input', () => {
             updateScore();
             updateInfo(gameBoard.currentPlay(), gameBoard.winTrue(), gameBoard.drawTrue());
-            gameBoard.colorLine(gameBoard.checkLastWin(0), gameBoard.checkLastWin(1), gameBoard.checkLastWin(2));
+            if (gameBoard.winTrue()) {
+                gameBoard.colorLine(gameBoard.checkLastWin(0), gameBoard.checkLastWin(1), gameBoard.checkLastWin(2));
+            }
         });
     });
 
