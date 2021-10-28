@@ -2,11 +2,16 @@
     box-sizing: border-box;
     margin: 0;
     font-family: Arial, sans-serif;
+    background: rgb(7, 18, 24);
+    color: white;
 }
+
 
 h1 {
     margin: auto;
     text-align: center;
+    font-size: 3rem;
+    text-shadow: 0 0 2em;
 }
 
 .scoreboard {
@@ -19,16 +24,23 @@ h1 {
 .player {
     flex: 1;
     overflow: hidden;
+    border: 0.2em solid white;
+    border-radius: 1em;
+    margin: 1em;
+    margin-top: 0.5em;
+    padding-top: 1em;
 }
 
 input {
     background: none;
-    border: none;
+    border: 0.05em solid white;
+    border-radius: 0.1em;
     font-size: 2rem;
     height: 50px;
     width: 60%;
     display: inline-flex;
     flex-grow: 1;
+    text-align: center;
 }
 
 button {
@@ -38,14 +50,32 @@ button {
     vertical-align:bottom;
     justify-content: center;
     cursor: pointer;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 0.25em;
 }
 
 img {
     height: 40px;
+    margin-top: 3px;
+    background: white;
 }
 
 .score {
     font-size: 10rem;
+    margin-top: -0.1em;
+    margin-bottom: -0.1em;
+}
+
+.color {
+    display: inline-flex;
+    width: 50px;
+    height: 50px;
+    vertical-align:bottom;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
 }
 
 #gameboard {
@@ -64,7 +94,7 @@ img {
     align-items: center;
     aspect-ratio: 1;
     font-size: 5rem;
-    border: 0.1px solid rgb(0, 0, 0);
+    border: 0.1px solid rgb(255, 255, 255);
 }
 
 #cell0 {
@@ -106,16 +136,18 @@ img {
 #info {
     text-align: center;
     font-size: 2rem;
-    margin-top: 1em;
+    margin-top: 0.3em;
 }
 
 .attribution {
     text-align: center;
-    margin-top: 2em;
-    color: black;
+    margin-top: 0.6em;
 }
 
-a{
+a {
     text-decoration: none;
-    color: black;
+}
+
+a:hover {
+    text-shadow: 0 0 0.5em white;
 }

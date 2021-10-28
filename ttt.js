@@ -1,8 +1,12 @@
 const gameBoard = (() => {
     var board = [];
     board.length = 9;
+    var lastWin = [];
     let win = false;
     let draw = false;
+    const winTrue = () => win;
+    const drawTrue = () => draw;
+    const checkLastWin = (i) => lastWin[i];
 
     const clearBoard = () => {
         board = [];
@@ -43,7 +47,8 @@ const gameBoard = (() => {
         for (i=0; i<9; i++) {
             if (board[i] != undefined) {
                 cell[i].innerHTML = board[i];
-                cell[i].style.color = 'black'
+                cell[i].style.color = 'white';
+                cell[i].style.textShadow = '0 0 1em white';
             } else {
                 cell[i].innerHTML = '';
             }
@@ -138,9 +143,16 @@ const gameBoard = (() => {
         const cell1 = document.getElementById('cell' + position1);
         const cell2 = document.getElementById('cell' + position2);
         const cell3 = document.getElementById('cell' + position3);
-        cell1.style.color = 'green';
-        cell2.style.color = 'green';
-        cell3.style.color = 'green';
+        var winner = undefined
+        if (currentPlay() === 'x') {
+            winner = playerOne;
+        } else {
+            winner = playerTwo;
+        }
+        displayInfo.updateColor(cell1, winner, 1);
+        displayInfo.updateColor(cell2, winner, 1);
+        displayInfo.updateColor(cell3, winner, 1);
+        lastWin = [position1, position2, position3]
     }
 
     const applyWin = () => {
@@ -177,7 +189,7 @@ const gameBoard = (() => {
 
     updateBoard();
 
-    return {resetBoard, updateBoard, currentPlay}
+    return {resetBoard, updateBoard, currentPlay, colorLine, winTrue, drawTrue, checkLastWin}
 })();
 
 const Player = (player) => {
@@ -185,7 +197,9 @@ const Player = (player) => {
     var computer = false;
     var hardDifficulty = false;
     const name = document.getElementById('player' + player)
+    const color = document.getElementById('color' + player);
     const getName = () => name.value;
+    const getColor = () => color.value;
     const addWin = () => wins++;
     const resetWin = () => wins = 0;
     const checkWins = () => wins;
@@ -193,7 +207,7 @@ const Player = (player) => {
     const isComputer = () => computer;
     const changeDifficulty = () => hardDifficulty = (hardDifficulty ? false : true);
     const isHard = () => hardDifficulty; 
-    return {getName, addWin, resetWin, checkWins, changeComputer, isComputer, changeDifficulty, isHard}
+    return {getName, getColor, addWin, resetWin, checkWins, changeComputer, isComputer, changeDifficulty, isHard}
 };
 
 
@@ -275,7 +289,9 @@ const displayInfo = (() => {
 
     const updateScore = () => {
         playerOneScore.innerHTML = playerOne.checkWins();
+        updateColor(playerOneScore, playerOne, 1);
         playerTwoScore.innerHTML = playerTwo.checkWins();
+        updateColor(playerTwoScore, playerTwo, 1)
     }
 
     const info = document.getElementById('info')
@@ -284,18 +300,24 @@ const displayInfo = (() => {
         if (win === true) {
             if (play === 'o') {
                 info.innerHTML = playerTwo.getName() + " wins"
+                updateColor(info, playerTwo, 0.25);
             } else {
                 info.innerHTML = playerOne.getName() + " wins"
+                updateColor(info, playerOne, 0.25);
             }
         } else if (draw === true) {
             info.innerHTML = "Draw"
+            info.style.color = 'white';
+            info.style.textShadow = '0 0 0.25em white'
         } else if (play  === 'o'){
+            updateColor(info, playerOne, 0.25);
             if (playerOne.getName().slice(-1) === 's') {
                 info.innerHTML = playerOne.getName() + "' turn"
             } else {
                 info.innerHTML = playerOne.getName() + "'s turn"
             }
         } else {
+            updateColor(info, playerTwo, 0.25);
             if (playerTwo.getName().slice(-1) === 's') {
                 info.innerHTML = playerTwo.getName() + "' turn"
             } else {
@@ -304,10 +326,31 @@ const displayInfo = (() => {
         }
     }
 
-    updateInfo('o', false, false);
+    const updateColor = (event, player, shadow) => {
+        event.style.color = player.getColor();
+        event.style.textShadow = '0 0 '+ shadow + 'em ' + player.getColor();
+    }
+
+    const colorPicker = document.querySelectorAll('.color');
+    colorPicker.forEach(event => {
+        event.addEventListener('input', () => {
+            updateScore();
+            updateInfo(gameBoard.currentPlay(), gameBoard.winTrue(), gameBoard.drawTrue());
+            gameBoard.colorLine(gameBoard.checkLastWin(0), gameBoard.checkLastWin(1), gameBoard.checkLastWin(2));
+        });
+    });
+
+    const nameChange = document.querySelectorAll('.name');
+    nameChange.forEach(event => {
+        event.addEventListener('input', () => {
+            updateInfo(gameBoard.currentPlay(), gameBoard.winTrue(), gameBoard.drawTrue())
+        });
+    });
+
+    updateInfo('o', gameBoard.winTrue(), gameBoard.drawTrue());
     updateScore();
 
-    return {updateScore, updateInfo}
+    return {updateScore, updateInfo, updateColor}
 })();
 
 const computerHard = (() => {
