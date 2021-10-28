@@ -232,11 +232,13 @@ const swapComputer = (() => {
     });
     diff1.addEventListener('click', () => {
         if (diff1.dataset.index === '0') {
-            diff1.innerHTML = 'HARD';
+            diff1.innerHTML = '<div class="buttonText">HARD</div>';
             diff1.dataset.index = '1';
+            diff1.classList.add('glowRed');
         } else {
-            diff1.innerHTML = 'EASY';
+            diff1.innerHTML = '<div class="buttonText">EASY</div>';
             diff1.dataset.index = '0';
+            diff1.classList.remove('glowRed');
         } 
         playerOne.changeDifficulty();
         reset();
@@ -261,11 +263,13 @@ const swapComputer = (() => {
     });
     diff2.addEventListener('click', () => {
         if (diff2.dataset.index === '0') {
-            diff2.innerHTML = 'HARD';
+            diff2.innerHTML = '<div class="buttonText">HARD</div>';
             diff2.dataset.index = '1';
+            diff2.classList.add('glowRed');
         } else {
-            diff2.innerHTML = 'EASY';
+            diff2.innerHTML = '<div class="buttonText">EASY</div>';
             diff2.dataset.index = '0';
+            diff2.classList.remove('glowRed');
         } 
         playerTwo.changeDifficulty();
         reset();
@@ -415,22 +419,56 @@ const computerHard = (() => {
             if (checkForWin(board, 2, 5, 8, play, guard)) {return 8;}
             if (checkForWin(board, 6, 3, 0, play, guard)) {return 0;}
             if (checkForWin(board, 6, 7, 8, play, guard)) {return 8;}   
-        }  if (board[1] === undefined && board[7] === undefined && (board[0] !== undefined || board[2] !== undefined || board[5] !== undefined || board[8] !== undefined)) {
+        }  if  (turn === 3){
+            if (board[0] !== undefined && board[0] !== secondPlay) {
+                if (board[5] !== undefined || board[7] !== undefined) {
+                    return 8;
+                } else if (board[8] !== undefined) {
+                    return 1;
+                }
+            } if (board[1] !== undefined) {
+                if (board[3] !== undefined || board[7] !== undefined) {
+                    return 0;
+                } else if (board[5] !== undefined) {
+                    return 2;
+                }
+            } if (board[2] !== undefined) {   
+                if (board[3] !== undefined || board[7] !== undefined) {
+                    return 6;
+                } else if (board[6] !== undefined) {
+                    return 7;
+                }
+            } if (board[7] !== undefined) {
+                if (board[3] !== undefined) {
+                    return 6;
+                } else if (board[5] !== undefined) {
+                    return 8;
+                }
+            } if (board[4] !== undefined && board[4] !== secondPlay && board[8] === board[4]) {
+                return 2;
+            }
+        } if (turn == 4) {
+            if (board[0] === board[4] && board[8] !== undefined) {
+                if (board[1] !== undefined) {
+                    return 3;
+                } else if (board[3] !== undefined) {
+                    return 1
+                }
+            }
+        } if (board[1] === undefined) {
             return 1;
-        } if (board[5] === undefined && board[3] === undefined && (board[0] !== undefined || board[7] !== undefined)) {
-            return 5;
-        } if (board[8] === undefined && board[5] !== undefined && board[7] !== undefined) {
-            return 8;
-        } if (board[0] === undefined) {
-            return 0;
         } if (board[2] === undefined) {
             return 2;
-        } if (board[7] === undefined) {
-            return 7;
         } if (board[3] === undefined) {
             return 3;
+        } if (board[5] === undefined) {
+            return 5;
         } if (board[6] === undefined) {
             return 6;
+        } if (board[7] === undefined) {
+            return 7;
+        } if (board[8] === undefined) {
+            return 8;
         }
     }
     return {bestMove}
