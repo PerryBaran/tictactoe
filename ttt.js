@@ -165,31 +165,18 @@ const gameBoard = (() => {
     }
 
     const computerPlay = () => {
-        if((playerOne.isHard() > 0) && currentPlay() === 'o' || (playerTwo.isHard() > 0) && currentPlay() === 'x') {
-            var currentPlayer = undefined;
-            if (currentPlay() === 'o') {
-                currentPlayer = playerOne;
-            } else {
-                currentPlayer = playerTwo;
-            }
-            var placement = computerHard.bestMove(board, turn, currentPlayer.isHard())
-            board[placement] = currentPlay();
-            turn++;
-            updateBoard();
-            checkWin();
-            displayInfo.updateInfo(currentPlay(), win, draw);
+        var currentPlayer = undefined;
+        if (currentPlay() === 'o') {
+            currentPlayer = playerOne;
         } else {
-            const play = () => Math.floor(Math.random()*9)
-            var placement = play()
-            while (board[placement] !== undefined) {
-                placement = play();
-            } 
-            board[placement] = currentPlay();
-            turn++;
-            updateBoard();
-            checkWin();
-            displayInfo.updateInfo(currentPlay(), win, draw);
+            currentPlayer = playerTwo;
         }
+        var placement = computerHard.bestMove(board, turn, currentPlayer.isHard())
+        board[placement] = currentPlay();
+        turn++;
+        updateBoard();
+        checkWin();
+        displayInfo.updateInfo(currentPlay(), win, draw);
     };
 
     updateBoard();
@@ -386,11 +373,11 @@ const computerHard = (() => {
     var secondPlay = undefined;
     var play = undefined;
 
-    const checkForWin = (board, position1, position2, position3, play, guard) => {
+    const checkForWin = (board, closed1, closed2, empty, play, guard) => {
         if (guard) {
-            return (board[position1] !== play && board[position1] !== undefined && board[position1] === board[position2] && board[position3] === undefined)
+            return (board[closed1] !== play && board[closed1] !== undefined && board[closed1] === board[closed2] && board[empty] === undefined)
         } else {
-            return (board[position1] === play && board[position1] !== undefined && board[position1] === board[position2] && board[position3] === undefined)
+            return (board[closed1] === play && board[closed1] !== undefined && board[closed1] === board[closed2] && board[empty] === undefined)
         }
     } 
 
@@ -425,32 +412,38 @@ const computerHard = (() => {
             play = secondPlay;
         } else {
             play = firstPlay;
-        } for (i = 0; i < 2; i++){
-            if (i === 0) {
-                guard = false;
-            } else {
-                guard = true;
-            }
-            if (checkForWin(board, 4, 0, 8, play, guard)) {return 8;}
-            if (checkForWin(board, 4, 1, 7, play, guard)) {return 7;}
-            if (checkForWin(board, 4, 2, 6, play, guard)) {return 6;}
-            if (checkForWin(board, 4, 3, 5, play, guard)) {return 5;}
-            if (checkForWin(board, 4, 5, 3, play, guard)) {return 3;}
-            if (checkForWin(board, 4, 6, 2, play, guard)) {return 2;}
-            if (checkForWin(board, 4, 7, 1, play, guard)) {return 1;}
-            if (checkForWin(board, 4, 8, 0, play, guard)) {return 0;}
-            if (checkForWin(board, 0, 1, 2, play, guard)) {return 2;}
-            if (checkForWin(board, 0, 2, 1, play, guard)) {return 1;}
-            if (checkForWin(board, 0, 3, 6, play, guard)) {return 6;}
-            if (checkForWin(board, 0, 6, 3, play, guard)) {return 3;}
-            if (checkForWin(board, 8, 6, 7, play, guard)) {return 7;}
-            if (checkForWin(board, 8, 7, 6, play, guard)) {return 6;}
-            if (checkForWin(board, 8, 2, 5, play, guard)) {return 5;}
-            if (checkForWin(board, 8, 5, 2, play, guard)) {return 2;}
-            if (checkForWin(board, 2, 1, 0, play, guard)) {return 0;}
-            if (checkForWin(board, 2, 5, 8, play, guard)) {return 8;}
-            if (checkForWin(board, 6, 3, 0, play, guard)) {return 0;}
-            if (checkForWin(board, 6, 7, 8, play, guard)) {return 8;}   
+        } if (hard !== 0) {
+            for (i = 0; i < 2; i++){
+                if (i === 0) {
+                    guard = false;
+                } else {
+                    guard = true;
+                }
+                if (checkForWin(board, 4, 0, 8, play, guard)) {return 8;}
+                if (checkForWin(board, 4, 1, 7, play, guard)) {return 7;}
+                if (checkForWin(board, 4, 2, 6, play, guard)) {return 6;}
+                if (checkForWin(board, 4, 3, 5, play, guard)) {return 5;}
+                if (checkForWin(board, 4, 5, 3, play, guard)) {return 3;}
+                if (checkForWin(board, 4, 6, 2, play, guard)) {return 2;}
+                if (checkForWin(board, 4, 7, 1, play, guard)) {return 1;}
+                if (checkForWin(board, 4, 8, 0, play, guard)) {return 0;}
+                if (checkForWin(board, 0, 1, 2, play, guard)) {return 2;}
+                if (checkForWin(board, 0, 2, 1, play, guard)) {return 1;}
+                if (checkForWin(board, 0, 3, 6, play, guard)) {return 6;}
+                if (checkForWin(board, 0, 6, 3, play, guard)) {return 3;}
+                if (checkForWin(board, 8, 6, 7, play, guard)) {return 7;}
+                if (checkForWin(board, 8, 7, 6, play, guard)) {return 6;}
+                if (checkForWin(board, 8, 2, 5, play, guard)) {return 5;}
+                if (checkForWin(board, 8, 5, 2, play, guard)) {return 2;}
+                if (checkForWin(board, 2, 1, 0, play, guard)) {return 0;}
+                if (checkForWin(board, 2, 5, 8, play, guard)) {return 8;}
+                if (checkForWin(board, 6, 3, 0, play, guard)) {return 0;}
+                if (checkForWin(board, 6, 7, 8, play, guard)) {return 8;}
+                if (checkForWin(board, 0, 8, 4, play, guard)) {return 4;}   
+                if (checkForWin(board, 1, 7, 4, play, guard)) {return 4;}   
+                if (checkForWin(board, 2, 6, 4, play, guard)) {return 4;}   
+                if (checkForWin(board, 3, 5, 4, play, guard)) {return 4;}
+            } 
         } if  (turn === 3 && hard === 2){
             if (board[0] !== undefined && board[0] !== secondPlay) {
                 if (board[5] !== undefined) {
